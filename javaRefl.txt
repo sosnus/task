@@ -10,3 +10,12 @@ public class Zapis{
 	  zapis.close();
   }
 }
+
+
+// inne 
+     Class clasz1 = Class.forName("java.lang.String"); // ³adujemy przy pomocy forName
+       Class clasz2 = String.class; // u¿ywamy pola class
+       Class clasz3 = "Test".getClass();
+
+    Class clasz3 = "Test".getClass();
+       Method method = clasz3.getMethod("compareTo",String.class);
