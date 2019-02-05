@@ -1,0 +1,110 @@
+
+
+ad1.
+CREATE OR REPLACE PROCEDURE PROC1 
+(
+  DEPID IN NUMBER 
+, SUMAWYPLAT OUT NUMBER 
+) AS
+ex Exception;
+counter NUMBER;
+BEGIN
+  select count(DEPTNO) into counter from DEPT where DEPTNO = DEPID;
+  
+  if counter > 0 then
+    select sum(sal+nvl(comm,0)) into SUMAWYPLAT from EMP;
+    else
+    raise ex; 
+    end if;
+    
+    EXCEPTION
+    when ex then 
+    DBMS_OUTPUT.PUT_LINE('Nie ma takiego departamentu');
+END PROC1;
+
+--przyklad
+DECLARE
+  DEPID NUMBER;
+  SUMAWYPLAT NUMBER;
+BEGIN
+  DEPID := 20;
+
+  PROC1(
+    DEPID => DEPID,
+    SUMAWYPLAT => SUMAWYPLAT
+  );
+  
+DBMS_OUTPUT.PUT_LINE('SUMAWYPLAT = ' || SUMAWYPLAT);
+
+  :SUMAWYPLAT := SUMAWYPLAT;
+END;
+
+
+
+
+
+ad2.
+CREATE OR REPLACE FUNCTION LICZBA_M 
+(
+  DATAW IN DATE 
+) RETURN NUMBER AS 
+ex EXCEPTION;
+BEGIN
+    
+    if DATAW is null then
+    raise ex;
+     else return TRUNC(MONTHS_BETWEEN(SYSDATE, to_date(DATAW))); 
+     --else raise ex;
+    end if;
+     EXCEPTION 
+     when ex then 
+     DBMS_OUTPUT.PUT_LINE('Nie podano daty');
+
+END LICZBA_M;
+
+-- przyklad uzycia
+DECLARE
+  DATAW DATE;
+  v_Return NUMBER;
+BEGIN
+  DATAW := to_date('1997/01/05');
+
+  v_Return := LICZBA_M(
+    DATAW => DATAW
+  ); 
+DBMS_OUTPUT.PUT_LINE('v_Return = ' || v_Return);
+  :v_Return := v_Return;
+
+END;
+
+
+
+ad3.
+declare 
+cursor cr is select ENAME, DNAME from DEPT, EMP where DEPT.DEPTNO = EMP.DEPTNO and sal>nvl(comm,0);
+zm cr%rowtype;
+begin 
+open cr;
+loop
+    fetch cr into zm;
+    exit when cr%notfound;
+    DBMS_OUTPUT.PUT_LINE(zm.ENAME  || ' ' || zm.DNAME);
+    end loop;
+end;
+
+
+
+ad4.
+CREATE OR REPLACE TRIGGER TRI1 
+BEFORE INSERT ON EMP
+for each row
+BEGIN
+
+  if :new.sal > 1600 then
+    :new.sal := 1600;
+
+end if;
+END;
+
+--przyklad
+insert into EMP(EMPNO, ENAME, JOB, MGR, HIREDATE, SAL,COMM,DEPTNO) values(7522,'Ole','NOWY2',7698,'81/02/22', 1650, 200, 30);
