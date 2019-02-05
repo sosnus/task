@@ -1,0 +1,15 @@
+    DBMS_OUTPUT.PUT_LINE('tekst');
+
+DBMS_OUTPUT.PUT_LINE('ZMIENNA = ' || ZMIENNA);
+
+
+SET SERVEROUT ON;
+SET SERVEROUTPUT ON
+
+dbms_output.put_line(a) ;
+dbms_output.put_line('Hello World ! ')  ;
+
+BEGIN
+    dbms_output.enable();
+    dbms_output.put_line ('TEST LINE'); 
+END;
